@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal Akademik Latihan</title>
+<style>
+  :root {
+    color-scheme: light;
+    --biru: #0f2c66;
+    --biru-2: #1c4a9e;
+    --biru-muda: #eef3fc;
+    --kuning: #fbbf24;
+    --kuning-tua: #e0a50f;
+    --putih: #ffffff;
+    --teks: #1a2238;
+    --abu: #5c667b;
+    --garis: #dfe5f1;
+    --hijau: #2a7a53;
+    --merah: #c0392b;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); font-size: clamp(16px, 12px + 0.4vw, 20px); }
+  body { margin: 0; background: var(--putih); color: var(--teks); font-family: -apple-system, "Segoe UI", system-ui, Roboto, sans-serif; }
+  h1, h2, h3 { margin: 0; }
+
+  .banner { background: #fff7db; border-bottom: 2px solid var(--kuning); color: #6b5200; text-align: center; font-weight: 700; font-size: .78rem; padding: 7px 10px; }
+
+  /* ===== Login ===== */
+  #login { min-height: calc(100vh - 32px); display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(180deg, var(--biru-muda), var(--putih)); }
+  .login-box { width: 100%; max-width: 26rem; background: var(--putih); border: 1px solid var(--garis); border-top: 5px solid var(--kuning); border-radius: 8px; padding: 32px 28px; box-shadow: 0 14px 36px rgba(15,44,102,.12); }
+  .logo { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 14px; background: var(--biru); color: var(--kuning); border: 3px solid var(--kuning); display: flex; align-items: center; justify-content: center; font-weight: 800; letter-spacing: .5px; }
+  .login-box h1 { text-align: center; font-size: 1.15rem; color: var(--biru); }
+  .login-box .sub { text-align: center; color: var(--abu); font-size: .84rem; margin: 4px 0 22px; }
+  label { display: block; font-size: .8rem; font-weight: 600; color: var(--biru); margin-bottom: 4px; }
+  input, select, textarea { width: 100%; padding: 10px 11px; border: 1px solid var(--garis); border-radius: 5px; font: inherit; font-size: .9rem; background: var(--putih); color: var(--teks); }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--biru-2); }
+  .f { margin-bottom: 14px; }
+  .btn { border: 0; border-radius: 5px; padding: 10px 18px; font: inherit; font-weight: 700; font-size: .88rem; cursor: pointer; }
+  .btn-kuning { background: var(--kuning); color: var(--biru); }
+  .btn-kuning:hover { background: var(--kuning-tua); }
+  .btn-lebar { width: 100%; padding: 12px; font-size: .95rem; }
+  .btn-garis { background: transparent; border: 1px solid var(--garis); color: var(--biru); padding: 7px 14px; }
+  .btn-garis:hover { background: var(--biru-muda); }
+  .petunjuk { margin-top: 14px; font-size: .76rem; color: var(--abu); text-align: center; line-height: 1.5; }
+  #loginErr { display: none; color: var(--merah); font-size: .82rem; margin-top: 8px; }
+
+  /* ===== Navbar ===== */
+  #app { display: none; }
+  nav.top { background: var(--biru); border-bottom: 4px solid var(--kuning); color: #fff; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 16px; padding: 10px 22px; }
+  .merek { display: flex; align-items: center; gap: 10px; }
+  .merek .lg { width: 36px; height: 36px; border-radius: 50%; background: #fff; color: var(--biru); border: 2px solid var(--kuning); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .75rem; }
+  .merek b { font-size: .95rem; display: block; line-height: 1.15; }
+  .merek small { font-size: .68rem; color: #b8c6e8; }
+  .menu { display: flex; flex-wrap: wrap; gap: 2px; flex: 1; }
+  .menu a { color: rgba(255,255,255,.82); font-size: .88rem; padding: 8px 12px; border-bottom: 3px solid transparent; border-radius: 4px; cursor: pointer; text-decoration: none; }
+  .menu a:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .menu a.aktif { color: #fff; font-weight: 700; border-bottom-color: var(--kuning); }
+  .akun { display: flex; align-items: center; gap: 12px; }
+  .akun .nm { text-align: right; font-size: .8rem; line-height: 1.25; }
+  .akun .rl { color: var(--kuning); font-size: .72rem; text-transform: capitalize; }
+  .btn-keluar { background: var(--kuning); color: var(--biru); padding: 8px 16px; }
+  .btn-keluar:hover { background: var(--kuning-tua); }
+
+  main { width: 100%; max-width: 1500px; margin: 0 auto; padding: clamp(20px, 2.5vw, 40px) clamp(14px, 3vw, 44px); }
+  .judul { margin-bottom: 20px; }
+  .judul h2 { color: var(--biru); font-size: 1.4rem; }
+  .judul p { color: var(--abu); font-size: .9rem; margin: 4px 0 0; }
+
+  /* ===== Kartu ===== */
+  .kartu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kartu { background: var(--putih); border: 1px solid var(--garis); border-top: 4px solid var(--kuning); border-radius: 6px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(15,44,102,.06); }
+  .kartu .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .4px; color: var(--abu); font-weight: 600; }
+  .kartu .v { font-size: 1.9rem; font-weight: 800; color: var(--biru); margin-top: 4px; }
+  .kartu .c { font-size: .76rem; color: var(--abu); }
+
+  .panel { background: var(--putih); border: 1px solid var(--garis); border-top: 4px solid var(--kuning); border-radius: 6px; padding: 20px; margin-bottom: 20px; }
+  .panel h3 { color: var(--biru); font-size: 1rem; margin-bottom: 14px; }
+  .dua { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tiga { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+  .gulir { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--putih); border: 1px solid var(--garis); }
+  th, td { text-align: left; padding: 10px 12px; font-size: .87rem; border-bottom: 1px solid var(--garis); }
+  th { background: var(--biru-muda); color: var(--biru); font-size: .75rem; text-transform: uppercase; letter-spacing: .4px; }
+  tr:last-child td { border-bottom: 0; }
+  .kosong { text-align: center; color: var(--abu); padding: 28px; font-size: .88rem; }
+
+  .filter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px; margin-bottom: 16px; }
+  .filter .f { margin: 0; min-width: 220px; }
+  .ringkas { background: var(--biru-muda); border-left: 4px solid var(--kuning); border-radius: 4px; padding: 9px 14px; font-size: .85rem; color: var(--biru); }
+  .ringkas b { font-size: 1.05rem; }
+  .sem { display: inline-block; background: var(--biru-muda); color: var(--biru); font-weight: 700; font-size: .75rem; border-radius: 4px; padding: 1px 8px; }
+  .nilai { display: inline-block; font-weight: 700; font-size: .82rem; border-radius: 4px; padding: 2px 10px; }
+  .nilai.ada { background: #e0f2e9; color: var(--hijau); }
+  .nilai.belum { background: #eef1f7; color: var(--abu); }
+  .peringatan { color: var(--merah); font-weight: 700; font-size: .86rem; margin-top: 6px; }
+
+  .pesan { border-bottom: 1px solid var(--garis); padding: 12px 0; }
+  .pesan:last-child { border-bottom: 0; }
+  .pesan .m { font-size: .76rem; color: var(--abu); margin-bottom: 3px; }
+  .pesan .m b { color: var(--biru); }
+  .pesan .t { font-size: .88rem; line-height: 1.5; }
+  code { background: var(--biru-muda); padding: 1px 5px; border-radius: 3px; font-size: .82rem; }
+  #toast { display: none; position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--biru); color: #fff; border-left: 4px solid var(--kuning); padding: 12px 18px; border-radius: 4px; font-size: .85rem; z-index: 50; }
+
+  @media (max-width: 640px) {
+    nav.top { padding: 10px 14px; }
+    .akun .nm { display: none; }
+    main { padding: 20px 14px; }
+    .dua, .tiga { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<section id="login">
+  <div class="login-box">
+    <h1>Portal Akademik Latihan</h1>
+    <div class="sub">Portal Akademik (Latihan)</div>
+    <div class="f"><label for="selAkun">Akun demo</label><select id="selAkun"></select></div>
+    <div class="f"><label for="inSandi">Kata sandi</label><input id="inSandi" type="password" value="demo123"></div>
+    <button class="btn btn-kuning btn-lebar" onclick="masuk()">Masuk</button>
+    <div id="loginErr">Kata sandi salah.</div>
+    <div class="petunjuk">Semua akun demo memakai kata sandi <b>demo123</b>. Seluruh nama dan data bersifat sintetis.</div>
+  </div>
+</section>
+
+<section id="app">
+  <nav class="top">
+    <div class="merek"><div><b>Portal Akademik</b><small>Latihan</small></div></div>
+    <div class="menu" id="menu"></div>
+    <div class="akun">
+      <div class="nm"><div id="nmAkun">—</div><div class="rl" id="rlAkun">—</div></div>
+      <button class="btn btn-keluar" onclick="keluar()">Keluar</button>
+    </div>
+  </nav>
+  <main id="isi"></main>
+</section>
+<div id="toast"></div>
+
+<script>
+/* ===== Penyimpanan: localStorage (tanpa server). Bila tidak tersedia, data hanya di memori. ===== */
+const KUNCI = "latihan-v1";
+let cadangan = null;
+
+function dataAwal() {
+  return {
+    pengguna: [
+      { id: "adm1", nama: "Admin Portal", peran: "admin" },
+      { id: "dsn1", nama: "Dr. Rina Kusumawati, M.Kom.", peran: "dosen" },
+      { id: "dsn2", nama: "Dr. Hendra Pratama, M.T.", peran: "dosen" },
+      { id: "mhs1", nama: "Raka Pradipta", peran: "mahasiswa", nim: "MB-20401" },
+      { id: "mhs2", nama: "Nadia Safitri", peran: "mahasiswa", nim: "MB-20402" },
+      { id: "mhs3", nama: "Fyan Ramadhan", peran: "mahasiswa", nim: "MB-20403" }
+    ],
+    matkul: [
+      { id: "k1", nama: "Pengantar Teknologi Informasi", sem: 1, sks: 3, dosen: "dsn1" },
+      { id: "k2", nama: "Logika Informatika", sem: 1, sks: 3, dosen: "dsn2" },
+      { id: "k3", nama: "Pemrograman Dasar", sem: 2, sks: 4, dosen: "dsn1" },
+      { id: "k4", nama: "Sistem Operasi", sem: 3, sks: 3, dosen: "dsn2" },
+      { id: "k5", nama: "Basis Data", sem: 3, sks: 3, dosen: "dsn1" },
+      { id: "k6", nama: "Pemograman SQL", sem: 4, sks: 3, dosen: "dsn2" }
+    ],
+    daftar: [
+      ["mhs1","k1"],["mhs1","k2"],["mhs1","k3"],["mhs1","k4"],["mhs1","k5"],["mhs1","k6"],
+      ["mhs2","k1"],["mhs2","k2"],["mhs2","k3"],["mhs2","k4"],["mhs2","k5"],
+      ["mhs3","k1"],["mhs3","k2"],["mhs3","k3"]
+    ].map(([m,k]) => ({ mhs: m, mk: k })),
+    nilai: [
+      { mhs:"mhs1", mk:"k1", n:"A" }, { mhs:"mhs1", mk:"k2", n:"B+" }, { mhs:"mhs1", mk:"k3", n:"A-" },
+      { mhs:"mhs1", mk:"k4", n:"B+" }, { mhs:"mhs1", mk:"k5", n:"A" },
+      { mhs:"mhs2", mk:"k1", n:"A-" }, { mhs:"mhs2", mk:"k2", n:"B" }, { mhs:"mhs2", mk:"k3", n:"B+" },
+      { mhs:"mhs2", mk:"k4", n:"B" },
+      { mhs:"mhs3", mk:"k1", n:"B" }, { mhs:"mhs3", mk:"k2", n:"C+" }
+    ],
+    tugas: [
+      { id: "t1", mhs: "mhs1", mk: "k6", judul: "Laporan Praktikum 02 (contoh)", waktu: "2026-10-05T10:00:00Z" }
+    ],
+    forum: [
+      { id: "f1", mk: "k6", penulis: "dsn2", teks: "Selamat datang di forum mata kuliah ini. Silakan bertanya di sini.", waktu: "2026-09-30T08:00:00Z" }
+    ]
+  };
+}
+function simpan() {
+  const s = JSON.stringify(D);
+  cadangan = s;
+  try { localStorage.setItem(KUNCI, s); } catch (e) {}
+}
+function muat() {
+  let raw = null;
+  try { raw = localStorage.getItem(KUNCI); } catch (e) { raw = cadangan; }
+  if (raw) { try { return JSON.parse(raw); } catch (e) {} }
+  const baru = dataAwal();
+  cadangan = JSON.stringify(baru);
+  try { localStorage.setItem(KUNCI, cadangan); } catch (e) {}
+  return baru;
+}
+let D = muat();
+let user = null;
+let halaman = null;
+let filterSem = "semua";
+
+/* ===== Util ===== */
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const cariUser = id => D.pengguna.find(u => u.id === id);
+const cariMk = id => D.matkul.find(m => m.id === id);
+const BOBOT = { "A":4, "A-":3.7, "B+":3.3, "B":3, "B-":2.7, "C+":2.3, "C":2, "D":1, "E":0 };
+function ip(daftar) {
+  let sks = 0, tot = 0;
+  daftar.forEach(x => { const p = BOBOT[String(x.n || "").toUpperCase()]; if (p !== undefined) { sks += x.sks; tot += p * x.sks; } });
+  return sks ? tot / sks : null;
+}
+function toast(t) {
+  const el = document.getElementById("toast");
+  el.textContent = t; el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 2200);
+}
+const $ = id => document.getElementById(id);
+
+/* ===== Login ===== */
+function isiDropdown() {
+  $("selAkun").innerHTML = D.pengguna.map(u => `<option value="${u.id}">${esc(u.nama)} — ${u.peran}</option>`).join("");
+}
+isiDropdown();
+
+/* KERENTANAN SENGAJA #1 — percobaan sandi tanpa pembatasan:
+   tidak ada penghitung gagal, lockout, atau jeda. masuk() bisa dipanggil
+   berulang tanpa batas (mis. lewat console) untuk menebak sandi. */
+function masuk() {
+  const id = $("selAkun").value;
+  if ($("inSandi").value !== "demo123") { $("loginErr").style.display = "block"; return; }
+  $("loginErr").style.display = "none";
+  user = cariUser(id);
+  $("login").style.display = "none";
+  $("app").style.display = "block";
+  bangunNav();
+}
+
+/* KERENTANAN SENGAJA #2 — eskalasi hak akses sisi klien:
+   peran hanya disimpan di variabel `user.peran` dan data localStorage, tanpa
+   verifikasi server. Di console: user.peran = 'admin'; bangunNav(); */
+function keluar() {
+  user = null;
+  $("app").style.display = "none";
+  $("login").style.display = "flex";
+}
+
+/* ===== Halaman ===== */
+const HALAMAN = [
+  { k: "dash",   label: "Dashboard",          peran: ["mahasiswa","dosen","admin"], fn: pDashboard },
+  { k: "nilai",  label: "Nilai Saya",         peran: ["mahasiswa"],                 fn: pNilai },
+  { k: "tugas",  label: "Unggah Tugas",       peran: ["mahasiswa"],                 fn: pTugas },
+  { k: "input",  label: "Input Nilai",        peran: ["dosen"],                     fn: pInputNilai },
+  { k: "masuk",  label: "Tugas Masuk",        peran: ["dosen"],                     fn: pTugasMasuk },
+  { k: "forum",  label: "Forum Diskusi",      peran: ["mahasiswa","dosen"],         fn: pForum },
+  { k: "akun",   label: "Kelola Akun",        peran: ["admin"],                     fn: pAkun },
+  { k: "mk",     label: "Kelola Mata Kuliah", peran: ["admin"],                     fn: pMatkul }
+];
+
+function bangunNav() {
+  $("nmAkun").textContent = user.nama;
+  $("rlAkun").textContent = user.peran;
+  const boleh = HALAMAN.filter(h => h.peran.includes(user.peran));
+  $("menu").innerHTML = boleh.map(h => `<a data-k="${h.k}" onclick="buka('${h.k}')">${h.label}</a>`).join("");
+  buka(boleh[0].k);
+}
+function buka(k) {
+  halaman = k;
+  document.querySelectorAll("#menu a").forEach(a => a.classList.toggle("aktif", a.dataset.k === k));
+  HALAMAN.find(h => h.k === k).fn();
+}
+const kartu = (k, v, c) => `<div class="kartu"><div class="k">${k}</div><div class="v">${v}</div>${c ? `<div class="c">${c}</div>` : ""}</div>`;
+
+/* ----- Dashboard ----- */
+function pDashboard() {
+  let k = "";
+  if (user.peran === "mahasiswa") {
+    const ambil = D.daftar.filter(d => d.mhs === user.id).map(d => {
+      const m = cariMk(d.mk); const g = D.nilai.find(x => x.mhs === user.id && x.mk === d.mk);
+      return { sks: m.sks, n: g ? g.n : null };
+    });
+    const ternilai = ambil.filter(a => a.n);
+    const ipk = ip(ternilai);
+    k = kartu("Mata kuliah diambil", ambil.length, "semua semester")
+      + kartu("Nilai sudah keluar", ternilai.length, `dari ${ambil.length} mata kuliah`)
+      + kartu("IPK sementara", ipk === null ? "—" : ipk.toFixed(2), "skala 4,00")
+      + kartu("Tugas diunggah", D.tugas.filter(t => t.mhs === user.id).length, "");
+  } else if (user.peran === "dosen") {
+    const mine = D.matkul.filter(m => m.dosen === user.id).map(m => m.id);
+    const peserta = D.daftar.filter(d => mine.includes(d.mk));
+    const belum = peserta.filter(d => !D.nilai.find(x => x.mhs === d.mhs && x.mk === d.mk)).length;
+    k = kartu("Mata kuliah diampu", mine.length, "")
+      + kartu("Total peserta", peserta.length, "")
+      + kartu("Nilai belum diisi", belum, "")
+      + kartu("Tugas masuk", D.tugas.filter(t => mine.includes(t.mk)).length, "");
+  } else {
+    k = kartu("Total akun", D.pengguna.length, "")
+      + kartu("Mahasiswa", D.pengguna.filter(u => u.peran === "mahasiswa").length, "")
+      + kartu("Dosen", D.pengguna.filter(u => u.peran === "dosen").length, "")
+      + kartu("Mata kuliah", D.matkul.length, "");
+  }
+  $("isi").innerHTML = `<div class="judul"><h2>Selamat datang, ${esc(user.nama.replace(" (sintetis)", ""))}</h2><p>Ringkasan akun Anda.</p></div><div class="kartu-grid">${k}</div>`;
+}
+
+/* ----- Nilai Saya + filter semester ----- */
+function setSem(v) { filterSem = v; pNilai(); }
+function pNilai() {
+  /* KERENTANAN SENGAJA #3 — IDOR: parameter ?nim=MB-xxxxx di URL dipakai
+     langsung untuk menampilkan nilai milik NIM tersebut, tanpa memeriksa
+     apakah NIM itu milik akun yang sedang login. */
+  const nim = new URLSearchParams(location.search).get("nim");
+  let target = user, orangLain = false;
+  if (nim) { const f = D.pengguna.find(u => u.nim === nim); if (f) { target = f; orangLain = f.id !== user.id; } }
+
+  const semua = D.daftar.filter(d => d.mhs === target.id).map(d => {
+    const m = cariMk(d.mk); const g = D.nilai.find(x => x.mhs === target.id && x.mk === d.mk);
+    return { m, n: g ? g.n : null, sks: m.sks };
+  }).sort((a, b) => a.m.sem - b.m.sem || a.m.nama.localeCompare(b.m.nama));
+
+  const daftarSem = [...new Set(semua.map(x => x.m.sem))].sort((a, b) => a - b);
+  const tampil = filterSem === "semua" ? semua : semua.filter(x => String(x.m.sem) === String(filterSem));
+  const nilaiIp = ip(tampil.filter(x => x.n));
+  const sks = tampil.reduce((a, x) => a + x.sks, 0);
+
+  const baris = tampil.map(x => {
+    const d = cariUser(x.m.dosen);
+    return `<tr><td><span class="sem">Sem ${x.m.sem}</span></td><td>${esc(x.m.nama)}</td><td>${x.sks}</td><td>${d ? esc(d.nama) : "—"}</td>
+      <td>${x.n ? `<span class="nilai ada">${esc(x.n)}</span>` : `<span class="nilai belum">Belum dinilai</span>`}</td></tr>`;
+  }).join("");
+
+  $("isi").innerHTML = `
+    <div class="judul"><h2>Nilai Saya</h2><p>Nilai akhir per mata kuliah. Gunakan filter untuk melihat per semester.</p>
+      ${orangLain ? `<div class="peringatan">⚠ Anda sedang melihat data ${esc(target.nama)} (${esc(target.nim)}) — ini kerentanan IDOR yang sengaja ditanam untuk latihan.</div>` : ""}
+    </div>
+    <div class="filter">
+      <div class="f"><label for="selSem">Filter semester</label>
+        <select id="selSem" onchange="setSem(this.value)">
+          <option value="semua"${filterSem === "semua" ? " selected" : ""}>Semua semester</option>
+          ${daftarSem.map(s => `<option value="${s}"${String(filterSem) === String(s) ? " selected" : ""}>Semester ${s}</option>`).join("")}
+        </select></div>
+      <div class="ringkas">${filterSem === "semua" ? "IPK sementara" : "IP semester " + filterSem}: <b>${nilaiIp === null ? "—" : nilaiIp.toFixed(2)}</b> · ${sks} SKS</div>
+    </div>
+    <div class="gulir"><table><thead><tr><th>Semester</th><th>Mata kuliah</th><th>SKS</th><th>Dosen</th><th>Nilai</th></tr></thead>
+    <tbody>${baris || `<tr><td colspan="5" class="kosong">Tidak ada mata kuliah pada semester ini.</td></tr>`}</tbody></table></div>
+    <p style="font-size:.76rem;color:var(--abu);margin-top:10px">Coba: tambahkan <code>?nim=MB-20402</code> di URL untuk melihat nilai mahasiswa lain tanpa izin.</p>`;
+}
+
+/* ----- Unggah tugas (simulasi) ----- */
+function pTugas() {
+  const mk = D.daftar.filter(d => d.mhs === user.id).map(d => cariMk(d.mk));
+  const riwayat = D.tugas.filter(t => t.mhs === user.id);
+  $("isi").innerHTML = `
+    <div class="judul"><h2>Unggah Tugas</h2><p>Simulasi — hanya mencatat judul di portal ini, tidak ada berkas yang dikirim ke server.</p></div>
+    <div class="panel"><h3>Formulir unggah</h3>
+      <div class="f"><label>Mata kuliah</label><select id="tMk">${mk.map(m => `<option value="${m.id}">${esc(m.nama)}</option>`).join("")}</select></div>
+      <div class="f"><label>Judul tugas</label><input id="tJudul" placeholder="mis. Laporan Praktikum Minggu 7"></div>
+      <button class="btn btn-kuning" onclick="kirimTugas()">Unggah</button></div>
+    <div class="panel"><h3>Riwayat unggahan saya</h3><div class="gulir"><table>
+      <thead><tr><th>Judul</th><th>Mata kuliah</th><th>Waktu</th></tr></thead>
+      <tbody>${riwayat.map(t => `<tr><td>${esc(t.judul)}</td><td>${esc(cariMk(t.mk).nama)}</td><td>${new Date(t.waktu).toLocaleString("id-ID")}</td></tr>`).join("") || `<tr><td colspan="3" class="kosong">Belum ada tugas diunggah.</td></tr>`}</tbody></table></div></div>`;
+}
+function kirimTugas() {
+  const judul = $("tJudul").value.trim();
+  if (!judul) return toast("Judul tidak boleh kosong.");
+  D.tugas.push({ id: "t" + Date.now(), mhs: user.id, mk: $("tMk").value, judul, waktu: new Date().toISOString() });
+  simpan(); toast("Tugas dicatat (simulasi)."); pTugas();
+}
+
+/* ----- Forum ----- */
+function pForum() {
+  const ids = user.peran === "mahasiswa" ? D.daftar.filter(d => d.mhs === user.id).map(d => d.mk) : D.matkul.filter(m => m.dosen === user.id).map(m => m.id);
+  const html = ids.map(cariMk).map(m => {
+    const pesan = D.forum.filter(p => p.mk === m.id).sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+    return `<div class="panel"><h3>${esc(m.nama)}</h3>
+      <div class="f"><textarea id="fi-${m.id}" rows="3" placeholder="Tulis pertanyaan atau komentar..."></textarea></div>
+      <button class="btn btn-kuning" onclick="kirimPesan('${m.id}')">Kirim</button>
+      <div style="margin-top:16px">
+      ${/* KERENTANAN SENGAJA #4 — Stored XSS: p.teks dirender lewat innerHTML tanpa encoding.
+           Payload yang tersimpan akan berjalan di browser setiap pengguna yang membuka thread.
+           Hanya isi pesan yang sengaja rentan; bagian lain di-escape. */ ""}
+      ${pesan.map(p => `<div class="pesan"><div class="m"><b>${esc(cariUser(p.penulis) ? cariUser(p.penulis).nama : "Akun dihapus")}</b> · ${new Date(p.waktu).toLocaleString("id-ID")}</div><div class="t">${p.teks}</div></div>`).join("") || `<div class="kosong">Belum ada diskusi.</div>`}
+      </div></div>`;
+  }).join("");
+  $("isi").innerHTML = `<div class="judul"><h2>Forum Diskusi</h2><p>Diskusi per mata kuliah untuk dosen dan mahasiswa terdaftar.</p></div>${html || `<div class="kosong">Belum terhubung ke mata kuliah apa pun.</div>`}`;
+}
+function kirimPesan(mk) {
+  const teks = $("fi-" + mk).value.trim();
+  if (!teks) return;
+  D.forum.push({ id: "f" + Date.now(), mk, penulis: user.id, teks, waktu: new Date().toISOString() });
+  simpan(); pForum();
+}
+
+/* ----- Dosen ----- */
+function pInputNilai() {
+  const mine = D.matkul.filter(m => m.dosen === user.id).sort((a, b) => a.sem - b.sem);
+  const baris = mine.flatMap(m => D.daftar.filter(d => d.mk === m.id).map(d => {
+    const s = cariUser(d.mhs); if (!s) return "";
+    const g = D.nilai.find(x => x.mhs === s.id && x.mk === m.id);
+    return `<tr><td>${esc(s.nama)}<br><small style="color:var(--abu)">${esc(s.nim || "")}</small></td><td>${esc(m.nama)}</td><td><span class="sem">Sem ${m.sem}</span></td>
+      <td><input style="width:72px;padding:6px 8px" id="ni-${s.id}-${m.id}" value="${g ? esc(g.n) : ""}" placeholder="—"></td>
+      <td><button class="btn btn-garis" onclick="simpanNilai('${s.id}','${m.id}')">Simpan</button></td></tr>`;
+  })).join("");
+  $("isi").innerHTML = `<div class="judul"><h2>Input Nilai</h2><p>Isi atau ubah nilai (A, A-, B+, B, B-, C+, C, D, E) untuk mata kuliah yang Anda ampu.</p></div>
+    <div class="gulir"><table><thead><tr><th>Mahasiswa</th><th>Mata kuliah</th><th>Semester</th><th>Nilai</th><th></th></tr></thead>
+    <tbody>${baris || `<tr><td colspan="5" class="kosong">Belum ada peserta.</td></tr>`}</tbody></table></div>`;
+}
+function simpanNilai(mhs, mk) {
+  const n = $(`ni-${mhs}-${mk}`).value.trim();
+  if (!n) return toast("Nilai tidak boleh kosong.");
+  const g = D.nilai.find(x => x.mhs === mhs && x.mk === mk);
+  if (g) g.n = n; else D.nilai.push({ mhs, mk, n });
+  simpan(); toast("Nilai disimpan."); pInputNilai();
+}
+function pTugasMasuk() {
+  const mine = D.matkul.filter(m => m.dosen === user.id).map(m => m.id);
+  const baris = D.tugas.filter(t => mine.includes(t.mk)).map(t => `<tr>
+    <td>${esc(cariUser(t.mhs) ? cariUser(t.mhs).nama : "Akun dihapus")}</td><td>${esc(cariMk(t.mk).nama)}</td><td>${esc(t.judul)}</td><td>${new Date(t.waktu).toLocaleString("id-ID")}</td></tr>`).join("");
+  $("isi").innerHTML = `<div class="judul"><h2>Tugas Masuk</h2><p>Tugas yang dikirim mahasiswa pada mata kuliah Anda.</p></div>
+    <div class="gulir"><table><thead><tr><th>Mahasiswa</th><th>Mata kuliah</th><th>Judul</th><th>Waktu</th></tr></thead>
+    <tbody>${baris || `<tr><td colspan="4" class="kosong">Belum ada tugas masuk.</td></tr>`}</tbody></table></div>`;
+}
+
+/* ----- Admin ----- */
+function pAkun() {
+  const baris = D.pengguna.map(u => `<tr><td>${esc(u.nama)}</td><td style="text-transform:capitalize">${u.peran}</td><td>${esc(u.nim || "—")}</td>
+    <td>${u.id === user.id ? `<small style="color:var(--abu)">(Anda)</small>` : `<button class="btn btn-garis" onclick="hapusAkun('${u.id}')">Hapus</button>`}</td></tr>`).join("");
+  $("isi").innerHTML = `<div class="judul"><h2>Kelola Akun</h2><p>Tambah atau hapus akun sintetis.</p></div>
+    <div class="panel"><h3>Tambah akun</h3><div class="dua">
+      <div class="f"><label>Nama (sintetis)</label><input id="aNama" placeholder="mis. Dewi Anggraini (sintetis)"></div>
+      <div class="f"><label>Peran</label><select id="aPeran"><option value="mahasiswa">Mahasiswa</option><option value="dosen">Dosen</option></select></div></div>
+      <button class="btn btn-kuning" onclick="tambahAkun()">Tambah Akun</button></div>
+    <div class="gulir"><table><thead><tr><th>Nama</th><th>Peran</th><th>NIM</th><th></th></tr></thead><tbody>${baris}</tbody></table></div>`;
+}
+function tambahAkun() {
+  const nama = $("aNama").value.trim(), peran = $("aPeran").value;
+  if (!nama) return toast("Nama tidak boleh kosong.");
+  const u = { id: (peran === "mahasiswa" ? "mhs" : "dsn") + Date.now(), nama: nama.includes("(sintetis)") ? nama : nama + " (sintetis)", peran };
+  if (peran === "mahasiswa") u.nim = "MB-" + Math.floor(10000 + Math.random() * 89999);
+  D.pengguna.push(u); simpan(); isiDropdown(); toast("Akun ditambahkan."); pAkun();
+}
+function hapusAkun(id) {
+  D.pengguna = D.pengguna.filter(u => u.id !== id);
+  simpan(); isiDropdown(); toast("Akun dihapus."); pAkun();
+}
+function pMatkul() {
+  const dosen = D.pengguna.filter(u => u.peran === "dosen");
+  const baris = [...D.matkul].sort((a, b) => a.sem - b.sem).map(m => `<tr><td><span class="sem">Sem ${m.sem}</span></td><td>${esc(m.nama)}</td><td>${m.sks}</td>
+    <td>${cariUser(m.dosen) ? esc(cariUser(m.dosen).nama) : "—"}</td><td>${D.daftar.filter(d => d.mk === m.id).length} mahasiswa</td></tr>`).join("");
+  $("isi").innerHTML = `<div class="judul"><h2>Kelola Mata Kuliah</h2><p>Daftar mata kuliah beserta semester, SKS, pengampu, dan peserta.</p></div>
+    <div class="panel"><h3>Tambah mata kuliah</h3>
+      <div class="tiga">
+        <div class="f"><label>Nama</label><input id="mNama" placeholder="mis. Pemrograman Web"></div>
+        <div class="f"><label>Semester</label><select id="mSem">${[1,2,3,4,5,6,7,8].map(s => `<option value="${s}">Semester ${s}</option>`).join("")}</select></div>
+        <div class="f"><label>SKS</label><select id="mSks">${[1,2,3,4].map(s => `<option value="${s}"${s === 3 ? " selected" : ""}>${s}</option>`).join("")}</select></div>
+      </div>
+      <div class="f"><label>Dosen pengampu</label><select id="mDosen">${dosen.map(d => `<option value="${d.id}">${esc(d.nama)}</option>`).join("")}</select></div>
+      <button class="btn btn-kuning" onclick="tambahMk()">Tambah</button></div>
+    <div class="gulir"><table><thead><tr><th>Semester</th><th>Mata kuliah</th><th>SKS</th><th>Dosen</th><th>Peserta</th></tr></thead><tbody>${baris}</tbody></table></div>`;
+}
+function tambahMk() {
+  const nama = $("mNama").value.trim();
+  if (!nama) return toast("Nama tidak boleh kosong.");
+  D.matkul.push({ id: "k" + Date.now(), nama, sem: parseInt($("mSem").value, 10), sks: parseInt($("mSks").value, 10), dosen: $("mDosen").value });
+  simpan(); toast("Mata kuliah ditambahkan."); pMatkul();
+}
+</script>
+</body>
+</html>
